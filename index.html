@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Data LAINNYA</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        body {
+            background: #fffbea;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #ff9100;
+            text-align: center;
+            margin-top: 24px;
+        }
+        table.dataTable thead {
+            background: #ffe0b2;
+        }
+        table.dataTable tbody tr {
+            background: #fff3e0;
+        }
+        /* Kolom align right */
+        td.align-right {
+            text-align: right !important;
+        }
+        /* Highlight search */
+        .dataTables_wrapper .dataTables_filter input {
+            background: #fff8e1;
+            border: 1px solid #ffd180;
+        }
+        /* Header color */
+        table.dataTable thead th {
+            color: #ff8c00;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data LAINNYA</h1>
+    <div style="width: 95%; margin: 0 auto;">
+        <table id="data-lainnya" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Kolom 1</th>
+                    <th>Kolom 2</th>
+                    <th>Kolom 3</th>
+                    <th>Kolom 4</th>
+                    <th>Kolom 5</th>
+                    <th>Kolom 6</th>
+                    <th>Kolom 7</th>
+                    <th>Kolom 8</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- jQuery & DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#data-lainnya').DataTable({
+                ajax: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQBSWp7dBKus6wO8G-vBtSW9ZpKlRbmNLbXsaWQZeaQU_ZEY9p9EujIGTyIPVzb5cgVTlq9d0Lf29P/pub?gid=583110442&single=true&output=csv",
+                processing: true,
+                serverSide: false,
+                paging: true,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+                },
+                dom: 'Bfrtip',
+                columns: [
+                    { data: null, visible: false, searchable: true }, // Kolom 1
+                    { data: null, visible: false, searchable: true }, // Kolom 2
+                    { data: null },                                    // Kolom 3
+                    { data: null, className: "align-right" },          // Kolom 4 align right
+                    { data: null },                                    // Kolom 5
+                    { data: null, visible: false, searchable: true }, // Kolom 6
+                    { data: null, className: "align-right" },          // Kolom 7 align right
+                    { data: null, visible: false, searchable: true }  // Kolom 8
+                ],
+                columnDefs: [
+                    {
+                        targets: [0,1,5,7],
+                        visible: false,
+                        searchable: true
+                    },
+                    {
+                        targets: [3,6],
+                        className: "align-right"
+                    }
+                ],
+                // Parse CSV
+                ajax: function (data, callback, settings) {
+                    $.ajax({
+                        url: settings.ajax,
+                        dataType: 'text',
+                        success: function (csv) {
+                            var lines = csv.split('\n');
+                            var result = [];
+                            for (var i = 1; i < lines.length; i++) {
+                                var row = lines[i].split(',');
+                                if (row.length >= 8) { // Pastikan ada 8 kolom
+                                    result.push(row);
+                                }
+                            }
+                            callback({ data: result });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
